@@ -18,8 +18,8 @@
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
   "devDependencies": {
-    "eslint": "^6.2.2",
-    "eslint-config-jnmorse": "^2.6.0",
+    "eslint": "^6.3.0",
+    "eslint-config-jnmorse": "^2.6.1",
     "http-server": "^0.11.1"
   }
 }
