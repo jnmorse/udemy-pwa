@@ -4,7 +4,8 @@
   "description": "A complete guide to PWAs. Building a simple Instagram clone.",
   "main": "index.js",
   "scripts": {
-    "start": "http-server -c-1 -p 3000"
+    "start": "http-server",
+    "lint": "eslint ."
   },
   "keywords": [
     "pwa",
@@ -17,6 +18,8 @@
   "author": "Maximilian Schwarzmüller",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^6.3.0",
+    "eslint-config-jnmorse": "^2.6.1",
     "http-server": "^0.11.1"
   }
 }
