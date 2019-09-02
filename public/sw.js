@@ -1,8 +1,11 @@
 /* eslint-disable no-console, no-restricted-globals */
+const STATIC_VERSION = 'static-v2.0.0';
+const DYNAMIC_VERSION = 'dynamic-v2.0.0';
+
 self.addEventListener('install', event => {
   console.log('[Service Worker] Installing Service Worker ...', event);
   event.waitUntil(
-    caches.open('static-v2').then(cache => {
+    caches.open(STATIC_VERSION).then(cache => {
       cache.addAll([
         '/',
         '/favicon.ico',
@@ -29,10 +32,12 @@ self.addEventListener('activate', event => {
     caches.keys().then(keys => {
       return Promise.all(
         keys.map(key => {
-          if (key !== 'static-v2' || key !== 'dynamic') {
+          if (key !== STATIC_VERSION && key !== DYNAMIC_VERSION) {
             console.log('[Service Worker] Removing old cache', key);
             return caches.delete(key);
           }
+
+          return null;
         })
       );
     })
@@ -49,7 +54,7 @@ self.addEventListener('fetch', event => {
 
       return fetch(event.request)
         .then(res => {
-          caches.open('dynamic').then(cache => {
+          caches.open(DYNAMIC_VERSION).then(cache => {
             // res.clone() clones the response so it still avaible
             cache.put(event.request.url, res.clone());
             return res;
