@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
-/* globals importScripts, writeData, clearAllData, deleteItemFromData */
+/* globals importScripts, writeData, clearAllData */
 /* eslint-disable no-console, no-restricted-globals */
 
 importScripts('/src/js/idb.js');
 importScripts('/src/js/util.js');
 
-const CACHE_STATIC_NAME = 'static-v2.3.5';
-const CACHE_DYNAMIC_NAME = 'dynamic-v2.0.4';
+const CACHE_STATIC_NAME = 'static-v2.5.0';
+const CACHE_DYNAMIC_NAME = 'dynamic-v2.0.5';
 
 const StaticFiles = [
   '/',
@@ -23,7 +23,9 @@ const StaticFiles = [
   '/src/js/material.min.js',
   '/src/css/app.css',
   '/src/css/feed.css',
+  '/src/images/main-image-sm.jpg',
   '/src/images/main-image.jpg',
+  '/src/images/main-image-lg.jpg',
   'https://fonts.googleapis.com/css?family=Roboto:400,700',
   'https://fonts.googleapis.com/icon?family=Material+Icons',
   'https://cdnjs.cloudflare.com/ajax/libs/material-design-lite/1.3.0/material.indigo-pink.min.css'
