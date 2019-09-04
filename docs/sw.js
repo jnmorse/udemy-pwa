@@ -10,11 +10,10 @@ const CACHE_DYNAMIC_NAME = 'dynamic-v2.0.5';
 
 const StaticFiles = [
   '/udemy-pwa/',
-  '/udemy-pwa',
-  '/index.html',
-  '/offline.html',
-  '/favicon.ico',
-  '/manifest.json',
+  '/udemy-pwa/index.html',
+  '/udemy-pwa/offline.html',
+  '/udemy-pwa/favicon.ico',
+  '/udemy-pwa/manifest.json',
   '/udemy-pwa/src/js/app.js',
   '/udemy-pwa/src/js/feed.js',
   '/udemy-pwa/src/js/idb.js',
@@ -104,7 +103,7 @@ self.addEventListener('fetch', event => {
       .catch(() =>
         caches.open(CACHE_STATIC_NAME).then(cache => {
           if (event.request.headers.get('accept').includes('text/html')) {
-            return cache.match('/offline.html');
+            return cache.match('/udemy-pwa/offline.html');
           }
 
           return undefined;
