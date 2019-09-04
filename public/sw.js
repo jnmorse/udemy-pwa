@@ -115,7 +115,7 @@ self.addEventListener('fetch', event => {
 self.addEventListener('sync', function backgroundSync(event) {
   console.log('[Service Worker] Background Syncing', event);
 
-  if (event.tag === 'newPosts') {
+  if (event.tag === 'sync-new-posts') {
     console.log('[Service Worker] Syncing new Posts');
     event.waitUntil(
       readAllData('sync-posts').then(data => {

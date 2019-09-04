@@ -137,7 +137,7 @@ form.addEventListener('submit', event => {
       };
 
       return writeData('sync-posts', post)
-        .then(() => sw.sync.register('newPosts'))
+        .then(() => sw.sync.register('sync-new-posts'))
         .then(() => {
           const snackbarContainer = document.querySelector(
             '#confirmation-toast'
