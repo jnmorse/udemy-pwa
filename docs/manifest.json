@@ -38,8 +38,8 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/index.html",
-  "scope": ".",
+  "start_url": "/udemy-pwa/index.html",
+  "scope": "/udemy-pwa/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#fff",
