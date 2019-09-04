@@ -1,4 +1,8 @@
 #create-post {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(100vh);
   z-index: 1001;
   position: fixed;
   width: 100%;
@@ -8,7 +12,13 @@
   top: 56px;
   background: white;
   text-align: center;
-  display: none;
+  transition: all 300ms ease-in-out;
+}
+
+#create-post.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 .main-image {
