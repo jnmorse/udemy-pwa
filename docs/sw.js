@@ -9,7 +9,8 @@ const CACHE_STATIC_NAME = 'static-v2.9.6';
 const CACHE_DYNAMIC_NAME = 'dynamic-v2.0.5';
 
 const StaticFiles = [
-  '/',
+  '/udemy-pwa/',
+  '/udemy-pwa',
   '/index.html',
   '/offline.html',
   '/favicon.ico',
