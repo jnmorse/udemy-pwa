@@ -1,0 +1,82 @@
+#create-post {
+  display: block;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(100vh);
+  z-index: 1001;
+  position: fixed;
+  width: 100%;
+  min-height: 100vh;
+  overflow-y: scroll;
+  bottom: 0;
+  top: 56px;
+  background: white;
+  text-align: center;
+  transition: all 300ms ease-in-out;
+}
+
+#create-post.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.main-image {
+  max-width: 100%;
+  margin: auto;
+  display: block;
+}
+
+.floating-button {
+  z-index: 1000;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 30px;
+}
+
+.input-section {
+  display: block;
+  margin: 10px auto;
+}
+
+.mdl-card__title {
+  background-position: center;
+}
+
+.shared-moment-card.mdl-card {
+  margin: 10px auto;
+  width: 80%;
+}
+
+@media screen and (min-width: 600px) {
+  .shared-moment-card.mdl-card {
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .shared-moment-card.mdl-card {
+    width: 45%;
+  }
+}
+
+.mdl-card__title-text {
+  color: white;
+}
+
+.shared-moment-card .mdl-card__title {
+  height: 120px;
+}
+
+@media screen and (min-height: 800px) {
+  .shared-moment-card .mdl-card__title {
+    height: 160px;
+  }
+}
+
+@media screen and (min-height: 1200px) {
+  .shared-moment-card .mdl-card__title {
+    height: 200px;
+  }
+}
