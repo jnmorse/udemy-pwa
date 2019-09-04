@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-/* globals importScripts, writeData, clearAllData */
+/* globals importScripts, writeData, clearAllData, readAllData, deleteItemFromData */
 /* eslint-disable no-console, no-restricted-globals */
 
 importScripts('/src/js/idb.js');
 importScripts('/src/js/util.js');
 
-const CACHE_STATIC_NAME = 'static-v2.6.12';
+const CACHE_STATIC_NAME = 'static-v2.9.6';
 const CACHE_DYNAMIC_NAME = 'dynamic-v2.0.5';
 
 const StaticFiles = [
@@ -110,4 +110,38 @@ self.addEventListener('fetch', event => {
         })
       )
   );
+});
+
+self.addEventListener('sync', function backgroundSync(event) {
+  console.log('[Service Worker] Background Syncing', event);
+
+  if (event.tag === 'newPosts') {
+    console.log('[Service Worker] Syncing new Posts');
+    event.waitUntil(
+      readAllData('sync-posts').then(data => {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const dt of data) {
+          fetch('https://pwagram-4d112.firebaseio.com/posts.json', {
+            method: 'post',
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'application/json'
+            },
+            body: JSON.stringify({
+              id: dt.id,
+              title: dt.title,
+              location: dt.location,
+              image: dt.image
+            })
+          })
+            .then(res => {
+              if (res.ok) {
+                deleteItemFromData('sync-posts', dt.id);
+              }
+            })
+            .catch(error => console.log('send data error', error));
+        }
+      })
+    );
+  }
 });
