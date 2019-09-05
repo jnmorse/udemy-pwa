@@ -1,13 +1,10 @@
-/* eslint-disable consistent-return */
-/* eslint-disable array-callback-return */
-/* eslint-disable max-lines-per-function */
-/* globals importScripts, writeData, clearAllData, readAllData, deleteItemFromData */
-/* eslint-disable no-console, no-restricted-globals */
+/* globals clients, importScripts, writeData, clearAllData, readAllData, deleteItemFromData */
+/* eslint-disable no-console, no-restricted-globals, consistent-return, array-callback-return, max-lines-per-function  */
 
 importScripts('/src/js/idb.js');
 importScripts('/src/js/util.js');
 
-const CACHE_STATIC_NAME = 'static-v3.1.0';
+const CACHE_STATIC_NAME = 'static-v3.2.0';
 const CACHE_DYNAMIC_NAME = 'dynamic-v2.0.5';
 
 const StaticFiles = [
@@ -141,4 +138,60 @@ self.addEventListener('sync', function backgroundSync(event) {
       })
     );
   }
+});
+
+self.addEventListener('notificationclick', event => {
+  console.log('[Service Worker] Noticication Click', event);
+
+  const { notification, action } = event;
+
+  switch (action) {
+    case 'confirm': {
+      console.log('confirm was choosen');
+      notification.close();
+      break;
+    }
+
+    default: {
+      console.log('some action', action);
+      event.waitUntil(
+        clients.matchAll().then(clis => {
+          const client = clis.find(c => c.visibilityState === 'visible');
+
+          if (client !== undefined) {
+            client.navigate(notification.data.url);
+            client.focus();
+          } else {
+            clients.openWindow(notification.data.url);
+          }
+        })
+      );
+      notification.close();
+    }
+  }
+});
+
+self.addEventListener('notificationclose', event => {
+  console.log('[Service Worker] Notification was closed', event);
+});
+
+self.addEventListener('push', event => {
+  console.log('[Service Worker] Push Notification received', event);
+
+  let data = { title: 'New', content: 'Something new happended', openUrl: '/' };
+
+  if (event.data) {
+    data = JSON.parse(event.data.text());
+  }
+
+  const options = {
+    body: data.content,
+    icon: '/src/images/icons/app-icon-96x96.png',
+    image: '/src/images/sf-boat.jpg',
+    data: {
+      url: data.openUrl
+    }
+  };
+
+  event.waitUntil(self.registration.showNotification(data.title, options));
 });
