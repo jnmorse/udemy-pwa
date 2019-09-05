@@ -1,9 +1,9 @@
-/* eslint-disable max-lines-per-function */
-/* eslint-disable no-console */
+/* eslint-disable no-console, max-lines-per-function */
+
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 const cors = require('cors')({ origin: true });
-const webPush = require('web-push');
+const webpush = require('web-push');
 
 /*
  * // Create and Deploy Your First Cloud Functions
@@ -11,11 +11,11 @@ const webPush = require('web-push');
  *
  */
 
-const serviceAcount = require('./fb-creds.json');
+const serviceAccount = require('./fb-creds.json');
 
 admin.initializeApp({
-  databaseURL: 'https://pwagram-4d112.firebaseio.com/',
-  credential: admin.credential.cert(serviceAcount)
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: 'https://pwagram-4d112.firebaseio.com/'
 });
 
 exports.storePostData = functions.https.onRequest((request, response) => {
@@ -30,8 +30,8 @@ exports.storePostData = functions.https.onRequest((request, response) => {
         image: request.body.image
       })
       .then(() => {
-        webPush.setVapidDetails(
-          'mailto:tamed.lionheart@gmail.com',
+        webpush.setVapidDetails(
+          'mailto:business@academind.com',
           functions.config().webpush.public,
           functions.config().webpush.private
         );
@@ -50,7 +50,7 @@ exports.storePostData = functions.https.onRequest((request, response) => {
             }
           };
 
-          webPush
+          webpush
             .sendNotification(
               pushConfig,
               JSON.stringify({
