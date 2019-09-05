@@ -31,7 +31,7 @@ exports.storePostData = functions.https.onRequest((request, response) => {
       })
       .then(() => {
         webpush.setVapidDetails(
-          'mailto:business@academind.com',
+          'mailto:tamed.lionheart@gmail.com',
           functions.config().webpush.public,
           functions.config().webpush.private
         );
