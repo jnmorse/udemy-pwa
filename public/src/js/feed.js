@@ -1,4 +1,4 @@
-/* globals componentHandler, readAllData, writeData */
+/* globals componentHandler, readAllData, writeData, dataURItoBlob */
 /* eslint-disable no-console, no-global-assign */
 const shareImageButton = document.querySelector('#share-image-button');
 const createPostArea = document.querySelector('#create-post');
@@ -14,6 +14,8 @@ const canvasElement = document.querySelector('#canvas');
 const captureButton = document.querySelector('#capture-btn');
 const imagePicker = document.querySelector('#image-picker');
 const imagePickerArea = document.querySelector('#pick-image');
+
+let picture;
 
 function initializeMedia() {
   if (!('mediaDevices' in navigator)) {
@@ -34,7 +36,40 @@ function initializeMedia() {
       });
     };
   }
+
+  navigator.mediaDevices
+    .getUserMedia({ video: { width: 320, height: 240 } })
+    .then(stream => {
+      captureButton.style.display = 'block';
+      videoPlayer.srcObject = stream;
+      videoPlayer.style.display = 'block';
+    })
+    .catch(() => {
+      imagePickerArea.style.display = 'block';
+    });
 }
+
+captureButton.addEventListener('click', () => {
+  canvasElement.style.display = 'block';
+  videoPlayer.style.display = 'none';
+  captureButton.style.display = 'none';
+
+  const context = canvasElement.getContext('2d');
+
+  context.drawImage(
+    videoPlayer,
+    0,
+    0,
+    canvasElement.width,
+    videoPlayer.videoHeight / (videoPlayer.videoWidth / canvasElement.width)
+  );
+
+  videoPlayer.srcObject.getVideoTracks().forEach(track => {
+    track.stop();
+  });
+
+  picture = dataURItoBlob(canvasElement.toDataURL());
+});
 
 function openCreatePostModal() {
   createPostArea.classList.add('show');
@@ -125,19 +160,18 @@ if ('indexedDB' in window) {
 }
 
 function sendData() {
+  const id = new Date().toISOString();
+
+  const postData = new FormData();
+
+  postData.append('id', id);
+  postData.append('title', titleInput.value);
+  postData.append('location', locationInput.value);
+  postData.append('file', picture, `${id}.png`);
+
   fetch('https://us-central1-pwagram-4d112.cloudfunctions.net/storePostData', {
     method: 'post',
-    headers: {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    },
-    body: JSON.stringify({
-      id: new Date().toISOString(),
-      title: titleInput.value,
-      location: locationInput.value,
-      image:
-        'https://firebasestorage.googleapis.com/v0/b/pwagram-4d112.appspot.com/o/sf-boat.jpg?alt=media&token=04be06a7-1ad5-40c9-8f60-714edc6d7599'
-    })
+    body: postData
   })
     .then(res => res.json())
     .then(data => console.log('sent data', data))
@@ -159,8 +193,7 @@ form.addEventListener('submit', event => {
         id: new Date().toISOString(),
         title: titleInput.value,
         location: locationInput.value,
-        image:
-          'https://firebasestorage.googleapis.com/v0/b/pwagram-4d112.appspot.com/o/sf-boat.jpg?alt=media&token=04be06a7-1ad5-40c9-8f60-714edc6d7599'
+        picture
       };
 
       return writeData('sync-posts', post)

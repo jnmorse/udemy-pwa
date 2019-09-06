@@ -4,7 +4,7 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/util.js');
 
-const CACHE_STATIC_NAME = 'static-v3.2.2';
+const CACHE_STATIC_NAME = 'static-v3.3.3';
 const CACHE_DYNAMIC_NAME = 'dynamic-v2.0.5';
 
 const StaticFiles = [
@@ -110,20 +110,17 @@ self.addEventListener('sync', function backgroundSync(event) {
       readAllData('sync-posts').then(data => {
         // eslint-disable-next-line no-restricted-syntax
         for (const dt of data) {
+          const postData = new FormData();
+
+          postData.append('id', dt.id);
+          postData.append('title', dt.title);
+          postData.append('location', dt.location);
+          postData.append('file', dt.picture, `${dt.id}.png`);
           fetch(
             'https://us-central1-pwagram-4d112.cloudfunctions.net/storePostData',
             {
               method: 'post',
-              headers: {
-                'Content-Type': 'application/json',
-                Accept: 'application/json'
-              },
-              body: JSON.stringify({
-                id: dt.id,
-                title: dt.title,
-                location: dt.location,
-                image: dt.image
-              })
+              body: postData
             }
           )
             .then(res => {

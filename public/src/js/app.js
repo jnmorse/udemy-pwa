@@ -74,11 +74,15 @@ function confirmPushSub() {
           applicationServerKey: convertedPublicKey
         });
       }
-      // use subscription
+
+      throw new Error('already subscribed');
     })
     .then(newSub => {
+      if (!newSub) {
+        return null;
+      }
       console.log(newSub);
-      return fetch('https://pwagram-4d112.firebaseio.com/sub.json', {
+      return fetch('https://pwagram-4d112.firebaseio.com/subscriptions.json', {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
