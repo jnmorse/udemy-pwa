@@ -4,8 +4,8 @@
 importScripts('/src/js/idb.js');
 importScripts('/src/js/util.js');
 
-const CACHE_STATIC_NAME = 'static-v3.5.1';
-const CACHE_DYNAMIC_NAME = 'dynamic-v2.0.6';
+const CACHE_STATIC_NAME = 'static-v3.6.3';
+const CACHE_DYNAMIC_NAME = 'dynamic-v2.1.0';
 
 const StaticFiles = [
   '/',
@@ -59,6 +59,9 @@ self.addEventListener('activate', event => {
 
 self.addEventListener('fetch', event => {
   const url = 'https://pwagram-4d112.firebaseio.com/posts.json';
+
+  const reqUrl = new URL(event.request.url);
+
   if (event.request.url.indexOf(url) > -1) {
     event.respondWith(
       fetch(event.request).then(res => {
@@ -75,6 +78,11 @@ self.addEventListener('fetch', event => {
         return res;
       })
     );
+  } else if (
+    StaticFiles.includes(reqUrl.href) ||
+    StaticFiles.includes(reqUrl.pathname)
+  ) {
+    event.respondWith(caches.match(event.request));
   } else {
     event.respondWith(
       caches.match(event.request).then(response => {

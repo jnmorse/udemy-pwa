@@ -74,7 +74,9 @@ function initializeMedia() {
   }
 
   navigator.mediaDevices
-    .getUserMedia({ video: { width: 320, height: 240 } })
+    .getUserMedia({
+      video: { width: 720, height: 1280 } // facingMode: 'environment' will use rear camera
+    })
     .then(stream => {
       captureButton.style.display = 'block';
       videoPlayer.srcObject = stream;
@@ -84,6 +86,13 @@ function initializeMedia() {
       imagePickerArea.style.display = 'block';
     });
 }
+
+videoPlayer.addEventListener('playing', function VideoPlaying(event) {
+  console.log('[video playing]', event);
+
+  console.log('width', this.videoWidth);
+  console.log('height', this.videoHeight);
+});
 
 captureButton.addEventListener('click', () => {
   canvasElement.style.display = 'block';
@@ -141,6 +150,12 @@ function closeCreatePostModal() {
   canvasElement.style.display = 'none';
   locationButton.style.display = 'inline';
   locationLoader.style.display = 'none';
+
+  if (videoPlayer.srcObject) {
+    videoPlayer.srcObject.getVideoTracks().forEach(track => {
+      track.stop();
+    });
+  }
 }
 
 shareImageButton.addEventListener('click', openCreatePostModal);
