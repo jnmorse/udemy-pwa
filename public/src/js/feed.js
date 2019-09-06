@@ -33,7 +33,7 @@ locationButton.addEventListener('click', () => {
       locationLoader.style.display = 'none';
       fetchedLocation = { latitude, longitude };
       locationInput.value = 'in New Hampshire';
-      locationInput.classList.add('is-focused');
+      document.querySelector('#manual-location').classList.add('is-focused');
     },
     error => {
       console.log(error);
