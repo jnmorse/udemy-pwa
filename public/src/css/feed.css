@@ -89,7 +89,9 @@
   margin: auto;
 }
 
-#create-post #pick-image {
+#create-post #pick-image,
+#create-post #capture-btn,
+#create-post #location-loader {
   display: none;
 }
 

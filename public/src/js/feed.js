@@ -14,6 +14,42 @@ const canvasElement = document.querySelector('#canvas');
 const captureButton = document.querySelector('#capture-btn');
 const imagePicker = document.querySelector('#image-picker');
 const imagePickerArea = document.querySelector('#pick-image');
+const locationButton = document.querySelector('#location-btn');
+const locationLoader = document.querySelector('#location-loader');
+let fetchedLocation = null;
+
+locationButton.addEventListener('click', () => {
+  if (!('geolocation' in navigator)) {
+    return null;
+  }
+
+  locationButton.style.display = 'none';
+  locationLoader.style.display = 'block';
+
+  return navigator.geolocation.getCurrentPosition(
+    position => {
+      const { latitude, longitude } = position.coords;
+      locationButton.style.display = 'inline';
+      locationLoader.style.display = 'none';
+      fetchedLocation = { latitude, longitude };
+      locationInput.value = 'in New Hampshire';
+      locationInput.classList.add('is-focused');
+    },
+    error => {
+      console.log(error);
+      locationButton.style.display = 'inline';
+      locationLoader.style.display = 'none';
+      fetchedLocation = { latitude: null, longitude: null };
+    },
+    { timeout: 7000 }
+  );
+});
+
+function initializeLocation() {
+  if (!('geolocation' in navigator)) {
+    locationButton.style.display = 'none';
+  }
+}
 
 let picture;
 
@@ -71,9 +107,14 @@ captureButton.addEventListener('click', () => {
   picture = dataURItoBlob(canvasElement.toDataURL());
 });
 
+imagePicker.addEventListener('change', event => {
+  [picture] = event.target.files;
+});
+
 function openCreatePostModal() {
   createPostArea.classList.add('show');
   initializeMedia();
+  initializeLocation();
   /*
    * if (deferredPrompt) {
    * deferredPrompt.prompt();
@@ -95,6 +136,11 @@ function openCreatePostModal() {
 
 function closeCreatePostModal() {
   createPostArea.classList.remove('show');
+  imagePickerArea.style.display = 'none';
+  videoPlayer.style.display = 'none';
+  canvasElement.style.display = 'none';
+  locationButton.style.display = 'inline';
+  locationLoader.style.display = 'none';
 }
 
 shareImageButton.addEventListener('click', openCreatePostModal);
@@ -167,6 +213,7 @@ function sendData() {
   postData.append('id', id);
   postData.append('title', titleInput.value);
   postData.append('location', locationInput.value);
+  postData.append('rawLocation', fetchedLocation);
   postData.append('file', picture, `${id}.png`);
 
   fetch('https://us-central1-pwagram-4d112.cloudfunctions.net/storePostData', {
@@ -193,6 +240,7 @@ form.addEventListener('submit', event => {
         id: new Date().toISOString(),
         title: titleInput.value,
         location: locationInput.value,
+        rawLocation: fetchedLocation,
         picture
       };
 
