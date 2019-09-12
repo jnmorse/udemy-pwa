@@ -214,9 +214,9 @@ if ('indexedDB' in window) {
 
     if (!gotData) {
       updateUI(data);
-    }
 
-    gotData = true;
+      return data.length > 0;
+    }
   });
 }
 
